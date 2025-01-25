@@ -18,7 +18,10 @@ const InvoiceBookSchema = mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId, 
             ref: "Invoice"
         }
-    ]
+    ],
+    logo: {
+        type: String
+    }
 })
 
 const InvoiceBook = mongoose.model("InvoiceBook", InvoiceBookSchema);

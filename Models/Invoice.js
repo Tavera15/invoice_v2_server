@@ -8,7 +8,6 @@ const InvoiceSchema = mongoose.Schema({
     isFinal: {
         type: Boolean
     },
-
     business: {
         name: {
             type: String,

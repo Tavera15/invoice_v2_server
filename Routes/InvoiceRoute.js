@@ -10,6 +10,7 @@ router.post("/CreateNewInvoiceBook", verifyToken, (req, res) => InvoiceBookContr
 router.put("/UpdateInvoiceBook/:id", verifyToken, (req, res) => InvoiceBookController.UpdateInvoiceBook(req, res));
 
 router.post("/CreateNewInvoice/:id", verifyToken, (req, res) => InvoiceBookController.CreateNewInvoice(req, res));
+router.put("/UpdateInvoice/:id/:invoiceNumber", verifyToken, (req, res) => InvoiceBookController.UpdateInvoice(req, res));
 
 
 module.exports = router;

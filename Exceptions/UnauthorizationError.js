@@ -1,9 +1,9 @@
 class UnauthorizationError extends Error
 {
-    constructor()
+    constructor(msg)
     {
         super();
-        this.message = "User credentials not authorized";
+        this.message = msg ?? "User credentials not authorized";
         this.status = 401;
     }
 }

@@ -112,6 +112,28 @@ const UpdateInvoiceBook = async (req, res) =>
     }
 }
 
+const GetInvoice = async (req, res) => 
+{
+    try
+    {
+        const invoice = await GetInvoiceByReq(req);
+
+        res.status(200).json(invoice);
+    }
+    catch(err)
+    {
+        switch(true)
+        {
+            case err instanceof EntityNotFoundError:
+                res.status(404).json(err);
+                break;
+            default:
+                res.status(500).json({message: err.message});
+                break;
+        }
+    }
+}
+
 const CreateNewInvoice = async (req, res) => 
 {
     try
@@ -176,7 +198,7 @@ const UpdateInvoice = async (req, res) =>
 {
     try
     {
-        const target = await GetInvoice(req);
+        const target = await GetInvoiceByReq(req);
         const newData = req.body;
 
         if(target.isFinal) {throw new UnauthorizationError("Unable to modify finalized invoice")}
@@ -224,6 +246,47 @@ const UpdateInvoice = async (req, res) =>
     }
 }
 
+const DeleteInvoice = async (req, res) => 
+{
+    try
+    {
+        const invoiceBookId = req.params.id;
+        const invoice = await GetInvoiceByReq(req);
+
+        if(invoice.isFinal) {throw new UnauthorizationError("Unable to delete finalized invoice")}
+        
+        const invoiceBook = await InvoiceBook.findById(invoiceBookId);
+
+        if(invoiceBook.invoices.find((i) => i._id.toString() === invoice._id.toString()))
+        {
+            invoiceBook.invoices.pull(invoice);
+            await invoiceBook.save();
+            await Invoice.deleteOne(invoice);
+
+            res.status(200).json(invoiceBook);
+        }
+        else
+        {
+            throw new EntityNotFoundError("Invoice not found");
+        }
+    }
+    catch(err)
+    {
+        switch(true)
+        {
+            case err instanceof EntityNotFoundError:
+                res.status(404).json(err);
+                break;
+            case err instanceof UnauthorizationError:
+                res.status(400).json({message: err.message});
+                break;
+            default:
+                res.status(500).json({message: err.message});
+                break;
+        }
+    }
+}
+
 const GetUser = async (req) => 
 {
     const user = await User.findById(req.userId).select("-password");
@@ -233,7 +296,7 @@ const GetUser = async (req) =>
     return user;
 }
 
-const GetInvoice = async (req) => 
+const GetInvoiceByReq = async (req) => 
 {
     const user = await GetUser(req);
     const invoiceBookId = req.params.id;
@@ -259,6 +322,9 @@ module.exports = {
     GetInvoiceBook,
     CreateNewInvoiceBook,
     UpdateInvoiceBook,
+
+    GetInvoice,
     CreateNewInvoice,
-    UpdateInvoice
+    UpdateInvoice,
+    DeleteInvoice
 }

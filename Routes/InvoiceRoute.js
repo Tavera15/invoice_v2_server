@@ -9,8 +9,10 @@ router.get("/GetInvoiceBook/:id", verifyToken, (req, res) => InvoiceBookControll
 router.post("/CreateNewInvoiceBook", verifyToken, (req, res) => InvoiceBookController.CreateNewInvoiceBook(req, res));
 router.put("/UpdateInvoiceBook/:id", verifyToken, (req, res) => InvoiceBookController.UpdateInvoiceBook(req, res));
 
+router.get("/GetInvoice/:id/:invoiceNumber", verifyToken, (req, res) => InvoiceBookController.GetInvoice(req, res));
 router.post("/CreateNewInvoice/:id", verifyToken, (req, res) => InvoiceBookController.CreateNewInvoice(req, res));
 router.put("/UpdateInvoice/:id/:invoiceNumber", verifyToken, (req, res) => InvoiceBookController.UpdateInvoice(req, res));
+router.delete("/DeleteInvoice/:id/:invoiceNumber", verifyToken, (req, res) => InvoiceBookController.DeleteInvoice(req, res));
 
 
 module.exports = router;

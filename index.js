@@ -7,7 +7,7 @@ http = require("http");
 require('dotenv').config();
 
 const UserRoute             = require("./Routes/UserRoute");
-const InvoiceBookRoute      = require("./Routes/InvoiceBookRoute");
+const InvoiceRoute          = require("./Routes/InvoiceRoute");
 
 const app = express();
 app.use(express.json());
@@ -21,7 +21,7 @@ mongoose
     .catch(err => console.log(err));
 
 app.use("/api/User", UserRoute);
-app.use("/api/InvoiceBook", InvoiceBookRoute);
+app.use("/api/Invoice", InvoiceRoute);
 
 app.get("/", (req, res) => {
     res.status(200).json({message: "Home Page"});

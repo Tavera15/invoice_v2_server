@@ -1,6 +1,5 @@
 const EntityNotFoundError = require("../Exceptions/EntityNotFoundError");
 const UnauthorizationError = require("../Exceptions/UnauthorizationError");
-const mongoose = require("mongoose");
 const Invoice = require("../Models/Invoice");
 const InvoiceBook = require("../Models/InvoiceBook");
 const User = require("../Models/User");

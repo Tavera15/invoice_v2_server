@@ -10,9 +10,6 @@ const BusinessSchema = mongoose.Schema({
     },
     email: {
         type: String,
-        required: true,
-        unique: true,
-        required: 'Email address is required',
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
     phone: {
@@ -33,6 +30,12 @@ const BusinessSchema = mongoose.Schema({
     zip: {
         type: String,
     },
+    productServices: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'ProductService'
+        }
+    ]
 })
 
 const Business = mongoose.model("Business", BusinessSchema);

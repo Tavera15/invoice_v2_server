@@ -9,7 +9,7 @@ const ProductServiceSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    unitPrice: {
+    price: {
         type: String,
         required: true
     },

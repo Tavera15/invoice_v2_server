@@ -30,15 +30,7 @@ const GetInvoiceBook = async (req, res) =>
 {
     try
     {
-        const user = await GetUser(req);
-        const targetId = req.params.id;
-
-        if(user.invoiceBooks.filter((b) => b._id.toString() === targetId).length < 1)
-        {
-            throw new EntityNotFoundError("Invoice Book not found")
-        }
-
-        const target = await InvoiceBook.findById(targetId);
+        const target = await GetInvoiceBookByReq(req);
 
         res.status(200).json(target);
     }
@@ -80,16 +72,8 @@ const UpdateInvoiceBook = async (req, res) =>
 {
     try
     {
-        const user = await GetUser(req);
-        const targetId = req.params.id;
+        const target = await GetInvoiceBookByReq(req);
         const {name, logo} = req.body;
-
-        if(user.invoiceBooks.filter((b) => b._id.toString() === targetId).length < 1)
-        {
-            throw new EntityNotFoundError("Invoice Book not found")
-        }
-
-        const target = await InvoiceBook.findById(targetId);
         
         target.name             = name;
         target.logo             = logo;
@@ -137,16 +121,9 @@ const CreateNewInvoice = async (req, res) =>
 {
     try
     {
+        const invoiceBook = await GetInvoiceBookByReq(req);
+        
         const newData = req.body;
-        const user = await GetUser(req);
-        const invoiceBookId = req.params.id;
-
-        if(user.invoiceBooks.filter((b) => b._id.toString() === invoiceBookId).length < 1)
-        {
-            throw new EntityNotFoundError("Invoice Book not found")
-        }
-
-        const invoiceBook = await InvoiceBook.findById(invoiceBookId);
         const newInvoice = new Invoice({invoiceBook: invoiceBook._id, isFinal: newData.isFinal, customs: JSON.stringify(newData.customs)});
 
         newInvoice.invoiceNumber            = invoiceBook.startingNumber;
@@ -293,6 +270,19 @@ const GetUser = async (req) =>
     if(!user) {throw new EntityNotFoundError("User not found")}
 
     return user;
+}
+
+const GetInvoiceBookByReq = async (req) =>
+{
+    const user = await GetUser(req);
+    const targetId = req.params.id;
+
+    if(user.invoiceBooks.filter((b) => b._id.toString() === targetId).length < 1)
+    {
+        throw new EntityNotFoundError("Invoice Book not found")
+    }
+
+    return await InvoiceBook.findById(targetId);
 }
 
 const GetInvoiceByReq = async (req) => 

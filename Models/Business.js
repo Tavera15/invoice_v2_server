@@ -35,6 +35,12 @@ const BusinessSchema = mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'ProductService'
         }
+    ],
+    customers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Customer'
+        }
     ]
 })
 

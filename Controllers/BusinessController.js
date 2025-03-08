@@ -332,6 +332,7 @@ const CreateNewCustomer = async (req, res) =>
     {
         const target = await GetBusinessByReq(req);
         const newData = req.body;
+        console.log(newData)
         const newCustomer = new Customer({business: target._id});
 
         newCustomer.name              = newData.name;

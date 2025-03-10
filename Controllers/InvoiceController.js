@@ -128,8 +128,8 @@ const CreateNewInvoice = async (req, res) =>
         const newInvoice = new Invoice({invoiceBook: invoiceBook._id, isFinal: newData.isFinal, customs: JSON.stringify(newData.customs)});
 
         newInvoice.invoiceNumber            = invoiceBook.startingNumber;
+        newInvoice.logo                     = invoiceBook.logo;
         
-        newInvoice.logo                     = newData.logo;
         newInvoice.business.name            = newData.business.name;
         newInvoice.business.addressLine1    = newData.business.addressLine1;
         newInvoice.business.addressLine2    = newData.business.addressLine2;
@@ -200,7 +200,7 @@ const UpdateInvoice = async (req, res) =>
         target.client.state             = newData.client.state;
         target.client.zip               = newData.client.zip;
         
-        target.logo                     = newData.logo;
+        target.logo                     = invoiceBook.logo;
         target.customs                  = JSON.stringify(newData.customs);
         target.subtotal                 = newData.subtotal;
         target.taxes                    = newData.taxes;
@@ -306,7 +306,7 @@ const CreateNewInvoiceExternal = async (req, res) =>
         const newInvoice = new Invoice({invoiceBook: invoiceBook._id, isFinal: true, customs: JSON.stringify(newData.customs)});
 
         newInvoice.invoiceNumber            = invoiceBook.startingNumber;
-        newInvoice.logo                     = newData.logo;
+        newInvoice.logo                     = invoiceBook.logo;
 
         newInvoice.business.name            = newData.business.name;
         newInvoice.business.addressLine1    = newData.business.addressLine1;

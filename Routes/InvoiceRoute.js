@@ -14,9 +14,7 @@ router.post("/CreateNewInvoice/:id", verifyToken, (req, res) => InvoiceBookContr
 router.put("/UpdateInvoice/:id/:invoiceNumber", verifyToken, (req, res) => InvoiceBookController.UpdateInvoice(req, res));
 router.delete("/DeleteInvoice/:id/:invoiceNumber", verifyToken, (req, res) => InvoiceBookController.DeleteInvoice(req, res));
 
-
-router.get("/GetInvoiceExternal/:id/:invoiceNumber", (req, res) => InvoiceBookController.GetInvoiceExternal(req, res));
-router.post("/CreateNewInvoiceExternal/:id", (req, res) => InvoiceBookController.CreateNewInvoiceExternal(req, res));
-
+router.get("/GetInvoiceExternal/:id/:invoiceNumber/:auth", (req, res) => InvoiceBookController.GetInvoiceExternal(req, res));
+router.post("/CreateNewInvoiceExternal/:id/:auth", (req, res) => InvoiceBookController.CreateNewInvoiceExternal(req, res));
 
 module.exports = router;

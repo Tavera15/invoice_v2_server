@@ -121,13 +121,15 @@ const CreateNewInvoice = async (req, res) =>
 {
     try
     {
+        const user = await GetUser(req);
         const invoiceBook = await GetInvoiceBookByReq(req);
         
         const newData = req.body;
         const newInvoice = new Invoice({invoiceBook: invoiceBook._id, isFinal: newData.isFinal, customs: JSON.stringify(newData.customs)});
 
         newInvoice.invoiceNumber            = invoiceBook.startingNumber;
-
+        
+        newInvoice.logo                     = newData.logo;
         newInvoice.business.name            = newData.business.name;
         newInvoice.business.addressLine1    = newData.business.addressLine1;
         newInvoice.business.addressLine2    = newData.business.addressLine2;
@@ -147,6 +149,7 @@ const CreateNewInvoice = async (req, res) =>
         newInvoice.subtotal                 = newData.subtotal;
         newInvoice.taxes                    = newData.taxes;
         newInvoice.grand_total              = newData.grand_total;
+        newInvoice.external_link            = newData.isFinal ? `${process.env.CLIENT_URL}/${invoiceBook._id}/${newInvoice._id}/${user._id}` : "";
 
         invoiceBook.invoices.push(newInvoice);
         invoiceBook.startingNumber++;
@@ -174,6 +177,8 @@ const UpdateInvoice = async (req, res) =>
 {
     try
     {
+        const user = await GetUser(req);
+        const invoiceBook = await GetInvoiceBookByReq(req);
         const target = await GetInvoiceByReq(req);
         const newData = req.body;
 
@@ -195,11 +200,14 @@ const UpdateInvoice = async (req, res) =>
         target.client.state             = newData.client.state;
         target.client.zip               = newData.client.zip;
         
+        target.logo                     = newData.logo;
         target.customs                  = JSON.stringify(newData.customs);
         target.subtotal                 = newData.subtotal;
         target.taxes                    = newData.taxes;
         target.grand_total              = newData.grand_total;
         target.isFinal                  = newData.isFinal;
+
+        target.external_link            = newData.isFinal ? `${process.env.CLIENT_URL}/${invoiceBook._id}/${target._id}/${user._id}` : ""
 
         await target.save();
 
@@ -292,11 +300,13 @@ const CreateNewInvoiceExternal = async (req, res) =>
 {
     try
     {
+        const auth = await req.params.auth;
         const invoiceBook = await GetInvoiceBookExternally(req);
         const newData = req.body;
         const newInvoice = new Invoice({invoiceBook: invoiceBook._id, isFinal: true, customs: JSON.stringify(newData.customs)});
 
         newInvoice.invoiceNumber            = invoiceBook.startingNumber;
+        newInvoice.logo                     = newData.logo;
 
         newInvoice.business.name            = newData.business.name;
         newInvoice.business.addressLine1    = newData.business.addressLine1;
@@ -317,6 +327,7 @@ const CreateNewInvoiceExternal = async (req, res) =>
         newInvoice.subtotal                 = newData.subtotal;
         newInvoice.taxes                    = newData.taxes;
         newInvoice.grand_total              = newData.grand_total;
+        newInvoice.external_link            = `${process.env.CLIENT_URL}/${invoiceBook._id}/${newInvoice._id}/${auth}`;
 
         invoiceBook.invoices.push(newInvoice);
         invoiceBook.startingNumber++;
@@ -324,7 +335,7 @@ const CreateNewInvoiceExternal = async (req, res) =>
         await newInvoice.save();
         await invoiceBook.save();
 
-        res.status(200).json(newInvoice);
+        res.status(200).json(newInvoice.external_link);
     }
     catch(err)
     {
@@ -354,8 +365,8 @@ const GetUser = async (req) =>
 
 const GetUserExternally = async (req) =>
 {
-    const token = req.headers[`${process.env.JWT_HEADER}`];
-    const user = await User.findById(token).select("-password");
+    const auth = await req.params.auth;
+    const user = await User.findById(auth).select("-password");
 
     if(!user) {throw new EntityNotFoundError("User not found")}
 

@@ -13,6 +13,9 @@ const InvoiceSchema = mongoose.Schema({
         type: Boolean,
         required: true
     },
+    logo: {
+        type: String
+    },
     business: {
         name: {
             type: String,
@@ -76,6 +79,9 @@ const InvoiceSchema = mongoose.Schema({
     grand_total: {
         type: String,
         required: true
+    },
+    external_link: {
+        type: String,
     }
 })
 

@@ -53,8 +53,8 @@ const CreateNewInvoiceBook = async (req, res) =>
     try
     {
         const user = await GetUser(req);
-        const {name, startingNumber} = req.body;
-        const newBook = new InvoiceBook({name, startingNumber, user: user._id});
+        const {name, startingNumber, logo} = req.body;
+        const newBook = new InvoiceBook({name, startingNumber, logo, user: user._id});
 
         user.invoiceBooks.push(newBook);
 
